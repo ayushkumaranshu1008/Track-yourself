@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Daily Routine Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-body">
+    <div class="stars"></div>
+    
+    <!-- Navigation Header -->
+    <header class="dashboard-header">
+        <div class="header-content">
+            <h1>📚 My Daily Routine</h1>
+            <div class="header-info">
+                <span id="userName"></span> | <span id="userRoll"></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard-container">
+        <!-- Left Sidebar - Student Info -->
+        <aside class="sidebar">
+            <div class="student-card">
+                <div class="student-avatar">👨‍🎓</div>
+                <div class="student-details">
+                    <h3 id="sName"></h3>
+                    <p id="sRoll"></p>
+                    <p id="sBranch"></p>
+                    <p id="sSemester"></p>
+                </div>
+            </div>
+
+            <div class="quick-stats">
+                <h4>Today's Stats</h4>
+                <div class="stat-box">
+                    <span class="stat-label">Tasks Added</span>
+                    <span class="stat-value" id="taskCount">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Completed</span>
+                    <span class="stat-value" id="completedCount">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Pending</span>
+                    <span class="stat-value" id="pendingCount">0</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Date Selector -->
+            <div class="date-selector">
+                <input 
+                    type="date" 
+                    id="dateInput" 
+                    class="date-input"
+                >
+                <span class="current-date" id="currentDate"></span>
+            </div>
+
+            <!-- Add New Task -->
+            <div class="add-task-section">
+                <h2>Add New Activity</h2>
+                <div class="add-task-form">
+                    <select id="timeSlot" class="input-field">
+                        <option value="">Select Time</option>
+                        <option value="06:00-07:00">6:00 AM - 7:00 AM (Morning Sports)</option>
+                        <option value="07:00-08:00">7:00 AM - 8:00 AM (Breakfast)</option>
+                        <option value="08:00-12:00">8:00 AM - 12:00 PM (Classes)</option>
+                        <option value="12:00-13:00">12:00 PM - 1:00 PM (Lunch)</option>
+                        <option value="13:00-15:00">1:00 PM - 3:00 PM (Lab/Study)</option>
+                        <option value="15:00-16:00">3:00 PM - 4:00 PM (Break)</option>
+                        <option value="16:00-18:00">4:00 PM - 6:00 PM (Study/Project)</option>
+                        <option value="18:00-19:00">6:00 PM - 7:00 PM (Dinner)</option>
+                        <option value="19:00-22:00">7:00 PM - 10:00 PM (Study)</option>
+                        <option value="22:00-23:30">10:00 PM - 11:30 PM (Personal Time)</option>
+                    </select>
+
+                    <input 
+                        type="text" 
+                        id="taskInput" 
+                        placeholder="What are you planning to do? (e.g., Physics Study, Project Work)" 
+                        class="input-field"
+                    >
+
+                    <select id="categorySelect" class="input-field">
+                        <option value="">Select Category</option>
+                        <option value="Study">📖 Study</option>
+                        <option value="Sports">⚽ Sports</option>
+                        <option value="Project">💻 Project</option>
+                        <option value="Lab">🔬 Lab</option>
+                        <option value="Food">🍽️ Food</option>
+                        <option value="Sleep">😴 Sleep</option>
+                        <option value="Other">📝 Other</option>
+                    </select>
+
+                    <button class="add-task-btn" onclick="addTask()">+ Add Activity</button>
+                </div>
+            </div>
+
+            <!-- Tasks List -->
+            <div class="tasks-section">
+                <h2>Today's Schedule</h2>
+                <div id="tasksList" class="tasks-list">
+                    <p class="empty-message">No activities added yet. Start planning your day!</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings/Notes Section -->
+    <div class="notes-section">
+        <h3>Daily Notes & Progress</h3>
+        <textarea 
+            id="dailyNotes" 
+            placeholder="Write your thoughts, accomplishments, or plan for tomorrow..."
+            class="notes-textarea"
+        ></textarea>
+        <button class="save-notes-btn" onclick="saveNotes()">💾 Save Notes</button>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Load user data
+        function loadDashboard() {
+            const userData = JSON.parse(localStorage.getItem('mmmutUserData'));
+            if (!userData) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.getElementById('userName').textContent = userData.name;
+            document.getElementById('userRoll').textContent = userData.rollNo;
+            document.getElementById('sName').textContent = userData.name;
+            document.getElementById('sRoll').textContent = 'Roll: ' + userData.rollNo;
+            document.getElementById('sBranch').textContent = userData.branch;
+            document.getElementById('sSemester').textContent = 'Semester ' + userData.semester;
+
+            // Set today's date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateInput').value = today;
+            updateDateDisplay();
+
+            loadTasks();
+            loadNotes();
+
+            // Listen for date changes
+            document.getElementById('dateInput').addEventListener('change', function() {
+                loadTasks();
+                loadNotes();
+                updateDateDisplay();
+            });
+        }
+
+        function updateDateDisplay() {
+            const dateInput = document.getElementById('dateInput').value;
+            const date = new Date(dateInput + 'T00:00:00');
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = date.toLocaleDateString('en-IN', options);
+        }
+
+        function addTask() {
+            const timeSlot = document.getElementById('timeSlot').value;
+            const taskText = document.getElementById('taskInput').value;
+            const category = document.getElementById('categorySelect').value;
+            const dateInput = document.getElementById('dateInput').value;
+
+            if (!timeSlot || !taskText || !category) {
+                alert('Please fill all fields!');
+                return;
+            }
+
+            const tasks = JSON.parse(localStorage.getItem('mmmutTasks')) || {};
+            if (!tasks[dateInput]) {
+                tasks[dateInput] = [];
+            }
+
+            const task = {
+                id: Date.now(),
+                time: timeSlot,
+                text: taskText,
+                category: category,
+                completed: false,
+                createdAt: new Date().toISOString()
+            };
+
+            tasks[dateInput].push(task);
+            localStorage.setItem('mmmutTasks', JSON.stringify(tasks));
+
+            // Clear inputs
+            document.getElementById('timeSlot').value = '';
+            document.getElementById('taskInput').value = '';
+            document.getElementById('categorySelect').value = '';
+
+            loadTasks();
+        }
+
+        function loadTasks() {
+            const dateInput = document.getElementById('dateInput').value;
+            const tasks = JSON.parse(localStorage.getItem('mmmutTasks')) || {};
+            const dayTasks = (tasks[dateInput] || []).sort((a, b) => a.time.localeCompare(b.time));
+
+            const tasksList = document.getElementById('tasksList');
+            
+            if (dayTasks.length === 0) {
+                tasksList.innerHTML = '<p class="empty-message">No activities added yet. Start planning your day!</p>';
+                updateStats();
+                return;
+            }
+
+            tasksList.innerHTML = dayTasks.map(task => {
+                const categoryEmoji = {
+                    'Study': '📖',
+                    'Sports': '⚽',
+                    'Project': '💻',
+                    'Lab': '🔬',
+                    'Food': '🍽️',
+                    'Sleep': '😴',
+                    'Other': '📝'
+                }[task.category] || '📝';
+
+                return `
+                    <div class="task-card ${task.completed ? 'completed' : ''}">
+                        <div class="task-checkbox">
+                            <input 
+                                type="checkbox" 
+                                ${task.completed ? 'checked' : ''}
+                                onchange="toggleTask(${task.id})"
+                            >
+                        </div>
+                        <div class="task-content">
+                            <div class="task-header">
+                                <span class="task-category">${categoryEmoji} ${task.category}</span>
+                                <span class="task-time">⏰ ${task.time}</span>
+                            </div>
+                            <p class="task-text">${task.text}</p>
+                        </div>
+                        <button class="delete-btn" onclick="deleteTask(${task.id})">🗑️</button>
+                    </div>
+                `;
+            }).join('');
+
+            updateStats();
+        }
+
+        function toggleTask(taskId) {
+            const dateInput = document.getElementById('dateInput').value;
+            const tasks = JSON.parse(localStorage.getItem('mmmutTasks')) || {};
+            const dayTasks = tasks[dateInput] || [];
+
+            const task = dayTasks.find(t => t.id === taskId);
+            if (task) {
+                task.completed = !task.completed;
+                tasks[dateInput] = dayTasks;
+                localStorage.setItem('mmmutTasks', JSON.stringify(tasks));
+                loadTasks();
+            }
+        }
+
+        function deleteTask(taskId) {
+            if (confirm('Delete this activity?')) {
+                const dateInput = document.getElementById('dateInput').value;
+                const tasks = JSON.parse(localStorage.getItem('mmmutTasks')) || {};
+                const dayTasks = tasks[dateInput] || [];
+                tasks[dateInput] = dayTasks.filter(t => t.id !== taskId);
+                localStorage.setItem('mmmutTasks', JSON.stringify(tasks));
+                loadTasks();
+            }
+        }
+
+        function updateStats() {
+            const dateInput = document.getElementById('dateInput').value;
+            const tasks = JSON.parse(localStorage.getItem('mmmutTasks')) || {};
+            const dayTasks = tasks[dateInput] || [];
+
+            document.getElementById('taskCount').textContent = dayTasks.length;
+            document.getElementById('completedCount').textContent = dayTasks.filter(t => t.completed).length;
+            document.getElementById('pendingCount').textContent = dayTasks.filter(t => !t.completed).length;
+        }
+
+        function saveNotes() {
+            const dateInput = document.getElementById('dateInput').value;
+            const notes = document.getElementById('dailyNotes').value;
+            
+            const allNotes = JSON.parse(localStorage.getItem('mmmutNotes')) || {};
+            allNotes[dateInput] = notes;
+            localStorage.setItem('mmmutNotes', JSON.stringify(allNotes));
+            
+            alert('Notes saved! 📝');
+        }
+
+        function loadNotes() {
+            const dateInput = document.getElementById('dateInput').value;
+            const allNotes = JSON.parse(localStorage.getItem('mmmutNotes')) || {};
+            document.getElementById('dailyNotes').value = allNotes[dateInput] || '';
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('mmmutUserData');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Initialize
+        loadDashboard();
+
+        // Animate stars
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = Math.random() * 3 + 'px';
+            star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.querySelector('.stars').appendChild(star);
+        }
+
+        for(let i = 0; i < 50; i++) {
+            createStar();
+        }
+    </script>
+</body>
+</html>

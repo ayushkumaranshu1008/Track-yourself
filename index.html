@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MMMUT Student Tracker - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+    <div class="stars"></div>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <h1>📚 MMMUT</h1>
+                <p>Student Daily Tracker</p>
+            </div>
+            
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        placeholder="Enter your name" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="rollNo">Roll No.</label>
+                    <input 
+                        type="text" 
+                        id="rollNo" 
+                        placeholder="e.g., 12345678" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="branch">Branch</label>
+                    <select id="branch" required>
+                        <option value="">Select Branch</option>
+                        <option value="CSE">Computer Science (CSE)</option>
+                        <option value="ECE">Electronics (ECE)</option>
+                        <option value="ME">Mechanical (ME)</option>
+                        <option value="CE">Civil (CE)</option>
+                        <option value="EEE">Electrical (EEE)</option>
+                        <option value="IT">Information Technology (IT)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="semester">Semester</label>
+                    <select id="semester" required>
+                        <option value="">Select Semester</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
+                        <option value="7">Semester 7</option>
+                        <option value="8">Semester 8</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="login-btn">Login & Start Tracking</button>
+            </form>
+
+            <div class="demo-info">
+                <p>🔒 Your data is stored locally on your device</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userData = {
+                name: document.getElementById('name').value,
+                rollNo: document.getElementById('rollNo').value,
+                branch: document.getElementById('branch').value,
+                semester: document.getElementById('semester').value,
+                loginDate: new Date().toISOString()
+            };
+            
+            localStorage.setItem('mmmutUserData', JSON.stringify(userData));
+            window.location.href = 'dashboard.html';
+        });
+
+        // Animate stars
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = Math.random() * 3 + 'px';
+            star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.querySelector('.stars').appendChild(star);
+        }
+
+        for(let i = 0; i < 50; i++) {
+            createStar();
+        }
+    </script>
+</body>
+</html>
