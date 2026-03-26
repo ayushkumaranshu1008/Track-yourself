@@ -1,6 +1,6 @@
 # MMMUT Student Daily Tracker 📚
 
-A beautiful, modern web application for B.TECH students at MMMUT to track their daily routine and manage their academic activities.
+A beautiful, modern web application for B.TECH students at MMMUT to track their daily routine and manage their academic activities. Inspired by Allen Coaching Institute's comprehensive learning platform.
 
 ## Features ✨
 
@@ -18,24 +18,173 @@ A beautiful, modern web application for B.TECH students at MMMUT to track their 
 - Date-based task management
 
 ### 3. **User Dashboard**
-- Student information card
-- Real-time statistics (Tasks, Completed, Pending)
+- Student information card with profile picture upload
+- Real-time statistics (Tasks, Completed, Pending, Completion Rate)
 - Beautiful date selector to view different days
 - Visual task cards with emojis
 - Daily notes section to write thoughts and progress
 
-### 4. **Beautiful UI**
+### 4. **Progress Analytics & Streaks**
+- Weekly progress tracking with visual progress bars
+- Study streak counter to maintain consistency
+- Completion rate calculations
+- Historical data preservation
+
+### 5. **AI Study Assistant Chatbot 🤖**
+- Interactive chatbot for study guidance (compact design)
+- Subject-specific tips and advice
+- Time management recommendations
+- Motivational support and study techniques
+- Doubt clearing assistance
+- Access to study materials through chat
+
+### 6. **Study Materials Library 📚**
+- Quick access to subject-wise study materials
+- Physics, Chemistry, Mathematics, Programming, and Web Development resources
+- Frontend and Backend options for each subject
+- Key topics, important formulas, and study tips
+- Click any subject card to get instant study materials in the chatbot
+
+### 7. **File Upload & Personal Materials 📁**
+- Direct file upload buttons on each subject card
+- Upload your own study materials (PDF, DOC, PPT, images, etc.)
+- Organize materials by subject
+- View, download, and delete uploaded files
+- Local storage ensures privacy
+- Chapter-wise organization for engineering students
+
+### 8. **Daily Practice Session 🎯**
+- AI-generated daily practice questions for all subjects
+- Physics: Numerical problems and conceptual questions
+- Chemistry: Reactions, calculations, and mechanisms
+- Mathematics: Calculus, algebra, and problem-solving
+- Programming: Algorithms, data structures, and coding concepts
+- Web Development: HTML, CSS, JavaScript, and frameworks
+- Hints and solutions available for each question
+
+### 9. **Events Management 📅**
+- Add important events with date, time, and description
+- Upcoming events display with automatic sorting
+- Edit and delete events functionality
+- Visual event cards with action buttons
+- Perfect for exam dates, deadlines, and important academic events
+
+### 10. **Advanced Analytics & Insights 📊**
+- Monthly progress tracking with detailed statistics
+- Subject performance analysis with visual charts
+- Study pattern recognition (best study days, peak hours, favorite subjects)
+- Weekly task averages and completion trends
+- Comprehensive performance insights for academic improvement
+
+### 11. **Smart Pagination System 📄**
+- Organized 3-page layout to reduce scrolling congestion
+- Page 1: Tasks and Study Materials
+- Page 2: Practice, Chatbot, and Events
+- Page 3: Notes and Advanced Analytics
+- Smooth page transitions with active indicators
+- Improved user experience and content organization
+
+### 12. **Allen Coaching Institute Features**
+- Comprehensive study planning with time slots
+- Progress analytics and performance tracking
+- Interactive learning assistance with AI chatbot
+- Subject-wise organized content with direct file uploads
+- Daily routine optimization with task categorization
+- Academic goal setting and tracking with streaks
+- Personal material management for engineering curriculum
+- Daily practice questions for continuous learning
+- Events management for important dates
+- Advanced analytics for performance insights
+- Smart pagination for better navigation
 - Modern dark theme with gradient backgrounds
 - Animated starfield background
 - Responsive design for all devices
 - Smooth animations and transitions
 - Glassmorphism effects with backdrop blur
 
-### 5. **Data Management**
+### 9. **Data Management**
 - All data stored locally in browser (localStorage)
 - Persistent across sessions
 - Ability to export data (via console functions)
 - Daily notes save feature
+- Profile picture storage
+
+## Getting Started 🚀
+
+### Prerequisites
+- Any modern web browser (Chrome, Firefox, Safari, Edge)
+- No server or internet connection required!
+
+### How to Use
+
+1. **First Time Login**
+   - Enter your Full Name
+   - Enter your 8-digit Roll Number
+   - Select your Branch and Semester
+
+2. **Dashboard Features**
+   - Upload your profile picture using the camera button
+   - Add daily activities with time slots and categories
+   - Track your progress with real-time statistics
+   - Use the AI chatbot for study guidance and doubt clearing
+   - Access study materials by clicking subject cards with direct upload buttons
+   - Upload personal files directly to each subject card
+   - Generate daily practice questions for any subject
+   - Add and manage important events with the events system
+   - View your weekly progress and study streaks
+   - Save daily notes and reflections
+   - Navigate between pages using the bottom pagination (1-2-3)
+
+3. **Page Navigation**
+   - **Page 1**: Tasks management and study materials with direct uploads
+   - **Page 2**: Daily practice, AI chatbot, and events management
+   - **Page 3**: Daily notes and advanced analytics insights
+
+4. **Study Materials & Practice**
+   - Click on any subject card to access materials
+   - Use direct upload buttons on each subject card for personal files
+   - Generate daily practice questions with hints and solutions
+   - View, download, or delete your uploaded materials
+   - Add important events for exam dates and deadlines
+
+5. **Advanced Features**
+   - Monitor detailed analytics on Page 3 (monthly stats, subject performance, study patterns)
+   - Use the events system to track important academic dates
+   - Switch between pages to access different features without scrolling
+
+## Technology Stack 🛠️
+
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Storage**: Browser LocalStorage API
+- **Styling**: Custom CSS with Glassmorphism effects
+- **Icons**: Unicode emojis and custom styling
+- **Responsive**: Mobile-first design approach
+
+## Browser Support 🌐
+
+- Chrome 80+
+- Firefox 75+
+- Safari 13+
+- Edge 80+
+
+## Data Privacy 🔒
+
+- All data is stored locally on your device
+- No data is sent to external servers
+- Complete privacy and security
+- Export functionality available for backup
+
+## Contributing 🤝
+
+Feel free to contribute to this project by:
+- Reporting bugs
+- Suggesting new features
+- Improving the UI/UX
+- Adding more study materials
+
+## License 📄
+
+This project is open source and available under the MIT License.
 
 ## Getting Started 🚀
 

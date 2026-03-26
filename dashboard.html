@@ -25,7 +25,12 @@
         <!-- Left Sidebar - Student Info -->
         <aside class="sidebar">
             <div class="student-card">
-                <div class="student-avatar">👨‍🎓</div>
+                <div class="student-avatar">
+                    <img id="studentImage" src="" alt="Profile" style="display: none; width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                    <span id="defaultAvatar">👨‍🎓</span>
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                    <button class="upload-btn" onclick="document.getElementById('imageUpload').click()">📷</button>
+                </div>
                 <div class="student-details">
                     <h3 id="sName"></h3>
                     <p id="sRoll"></p>
@@ -48,156 +53,285 @@
                     <span class="stat-label">Pending</span>
                     <span class="stat-value" id="pendingCount">0</span>
                 </div>
+                <div class="stat-box">
+                    <span class="stat-label">Completion Rate</span>
+                    <span class="stat-value" id="completionRate">0%</span>
+                </div>
+            </div>
+
+            <div class="progress-analytics">
+                <h4>Weekly Progress</h4>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="weeklyProgress" style="width: 0%"></div>
+                </div>
+                <p class="progress-text" id="weeklyStats">Loading...</p>
+                
+                <h4>Study Streak</h4>
+                <div class="streak-counter">
+                    <span class="streak-icon">🔥</span>
+                    <span class="streak-number" id="studyStreak">0</span>
+                    <span class="streak-label">days</span>
+                </div>
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Date Selector -->
-            <div class="date-selector">
-                <input 
-                    type="date" 
-                    id="dateInput" 
-                    class="date-input"
-                >
-                <span class="current-date" id="currentDate"></span>
-            </div>
-
-            <!-- Add New Task -->
-            <div class="add-task-section">
-                <h2>Add New Activity</h2>
-                <div class="add-task-form">
-                    <select id="timeSlot" class="input-field">
-                        <option value="">Select Time</option>
-                        <option value="06:00-07:00">6:00 AM - 7:00 AM (Morning Sports)</option>
-                        <option value="07:00-08:00">7:00 AM - 8:00 AM (Breakfast)</option>
-                        <option value="08:00-12:00">8:00 AM - 12:00 PM (Classes)</option>
-                        <option value="12:00-13:00">12:00 PM - 1:00 PM (Lunch)</option>
-                        <option value="13:00-15:00">1:00 PM - 3:00 PM (Lab/Study)</option>
-                        <option value="15:00-16:00">3:00 PM - 4:00 PM (Break)</option>
-                        <option value="16:00-18:00">4:00 PM - 6:00 PM (Study/Project)</option>
-                        <option value="18:00-19:00">6:00 PM - 7:00 PM (Dinner)</option>
-                        <option value="19:00-22:00">7:00 PM - 10:00 PM (Study)</option>
-                        <option value="22:00-23:30">10:00 PM - 11:30 PM (Personal Time)</option>
-                    </select>
-
+            <!-- Page 1: Tasks and Study Materials -->
+            <div id="page1" class="page active">
+                <!-- Date Selector -->
+                <div class="date-selector">
                     <input 
-                        type="text" 
-                        id="taskInput" 
-                        placeholder="What are you planning to do? (e.g., Physics Study, Project Work)" 
-                        class="input-field"
+                        type="date" 
+                        id="dateInput" 
+                        class="date-input"
                     >
+                    <span class="current-date" id="currentDate"></span>
+                </div>
 
-                    <select id="categorySelect" class="input-field">
-                        <option value="">Select Category</option>
-                        <option value="Study">📖 Study</option>
-                        <option value="Sports">⚽ Sports</option>
-                        <option value="Project">💻 Project</option>
-                        <option value="Lab">🔬 Lab</option>
-                        <option value="Food">🍽️ Food</option>
-                        <option value="Sleep">😴 Sleep</option>
-                        <option value="Other">📝 Other</option>
-                    </select>
+                <!-- Add New Task -->
+                <div class="add-task-section">
+                    <h2>Add New Activity</h2>
+                    <div class="add-task-form">
+                        <select id="timeSlot" class="input-field">
+                            <option value="">Select Time</option>
+                            <option value="06:00-07:00">6:00 AM - 7:00 AM (Morning Sports)</option>
+                            <option value="07:00-08:00">7:00 AM - 8:00 AM (Breakfast)</option>
+                            <option value="08:00-12:00">8:00 AM - 12:00 PM (Classes)</option>
+                            <option value="12:00-13:00">12:00 PM - 1:00 PM (Lunch)</option>
+                            <option value="13:00-15:00">1:00 PM - 3:00 PM (Lab/Study)</option>
+                            <option value="15:00-16:00">3:00 PM - 4:00 PM (Break)</option>
+                            <option value="16:00-18:00">4:00 PM - 6:00 PM (Study/Project)</option>
+                            <option value="18:00-19:00">6:00 PM - 7:00 PM (Dinner)</option>
+                            <option value="19:00-22:00">7:00 PM - 10:00 PM (Study)</option>
+                            <option value="22:00-23:30">10:00 PM - 11:30 PM (Personal Time)</option>
+                        </select>
 
-                    <button class="add-task-btn" onclick="addTask()">+ Add Activity</button>
+                        <input 
+                            type="text" 
+                            id="taskInput" 
+                            placeholder="What are you planning to do? (e.g., Physics Study, Project Work)" 
+                            class="input-field"
+                        >
+
+                        <select id="categorySelect" class="input-field">
+                            <option value="">Select Category</option>
+                            <option value="Study">📖 Study</option>
+                            <option value="Sports">⚽ Sports</option>
+                            <option value="Project">💻 Project</option>
+                            <option value="Lab">🔬 Lab</option>
+                            <option value="Food">🍽️ Food</option>
+                            <option value="Sleep">😴 Sleep</option>
+                            <option value="Other">📝 Other</option>
+                        </select>
+
+                        <button class="add-task-btn" onclick="addTask()">+ Add Activity</button>
+                    </div>
+                </div>
+
+                <!-- Tasks List -->
+                <div class="tasks-section">
+                    <h2>Today's Schedule</h2>
+                    <div id="tasksList" class="tasks-list">
+                        <p class="empty-message">No activities added yet. Start planning your day!</p>
+                    </div>
+                </div>
+
+                <!-- Study Materials Section -->
+                <div class="study-materials-section">
+                    <h2>📚 Study Materials</h2>
+                    <div class="materials-grid">
+                        <div class="material-card" onclick="openSubjectMaterial('physics')">
+                            <div class="material-icon">⚛️</div>
+                            <h3>Physics</h3>
+                            <p>Notes, formulas & practice problems</p>
+                            <div class="card-actions">
+                                <button class="action-btn upload-btn-small" onclick="event.stopPropagation(); triggerFileUpload('physics')">📁 Upload</button>
+                                <button class="action-btn view-btn" onclick="event.stopPropagation(); viewSubjectMaterials('physics')">👁️ View Files</button>
+                            </div>
+                            <input type="file" id="physics-upload" style="display: none;" accept=".pdf,.doc,.docx,.txt,.jpg,.png,.ppt,.pptx" onchange="uploadSubjectFile('physics', this)">
+                        </div>
+                        <div class="material-card" onclick="openSubjectMaterial('chemistry')">
+                            <div class="material-icon">🧪</div>
+                            <h3>Chemistry</h3>
+                            <p>Reactions, equations & concepts</p>
+                            <div class="card-actions">
+                                <button class="action-btn upload-btn-small" onclick="event.stopPropagation(); triggerFileUpload('chemistry')">📁 Upload</button>
+                                <button class="action-btn view-btn" onclick="event.stopPropagation(); viewSubjectMaterials('chemistry')">👁️ View Files</button>
+                            </div>
+                            <input type="file" id="chemistry-upload" style="display: none;" accept=".pdf,.doc,.docx,.txt,.jpg,.png,.ppt,.pptx" onchange="uploadSubjectFile('chemistry', this)">
+                        </div>
+                        <div class="material-card" onclick="openSubjectMaterial('mathematics')">
+                            <div class="material-icon">🔢</div>
+                            <h3>Mathematics</h3>
+                            <p>Formulas, theorems & solutions</p>
+                            <div class="card-actions">
+                                <button class="action-btn upload-btn-small" onclick="event.stopPropagation(); triggerFileUpload('mathematics')">📁 Upload</button>
+                                <button class="action-btn view-btn" onclick="event.stopPropagation(); viewSubjectMaterials('mathematics')">👁️ View Files</button>
+                            </div>
+                            <input type="file" id="mathematics-upload" style="display: none;" accept=".pdf,.doc,.docx,.txt,.jpg,.png,.ppt,.pptx" onchange="uploadSubjectFile('mathematics', this)">
+                        </div>
+                        <div class="material-card" onclick="openSubjectMaterial('programming')">
+                            <div class="material-icon">💻</div>
+                            <h3>Programming</h3>
+                            <p>Code examples & algorithms</p>
+                            <div class="card-actions">
+                                <button class="action-btn upload-btn-small" onclick="event.stopPropagation(); triggerFileUpload('programming')">📁 Upload</button>
+                                <button class="action-btn view-btn" onclick="event.stopPropagation(); viewSubjectMaterials('programming')">👁️ View Files</button>
+                            </div>
+                            <input type="file" id="programming-upload" style="display: none;" accept=".pdf,.doc,.docx,.txt,.jpg,.png,.ppt,.pptx" onchange="uploadSubjectFile('programming', this)">
+                        </div>
+                        <div class="material-card" onclick="openSubjectMaterial('webdev')">
+                            <div class="material-icon">🌐</div>
+                            <h3>Web Development</h3>
+                            <p>HTML, CSS, JS & frameworks</p>
+                            <div class="card-actions">
+                                <button class="action-btn upload-btn-small" onclick="event.stopPropagation(); triggerFileUpload('webdev')">📁 Upload</button>
+                                <button class="action-btn view-btn" onclick="event.stopPropagation(); viewSubjectMaterials('webdev')">👁️ View Files</button>
+                            </div>
+                            <input type="file" id="webdev-upload" style="display: none;" accept=".pdf,.doc,.docx,.txt,.jpg,.png,.ppt,.pptx" onchange="uploadSubjectFile('webdev', this)">
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Tasks List -->
-            <div class="tasks-section">
-                <h2>Today's Schedule</h2>
-                <div id="tasksList" class="tasks-list">
-                    <p class="empty-message">No activities added yet. Start planning your day!</p>
+            <!-- Page 2: Practice, Chatbot, and Events -->
+            <div id="page2" class="page">
+                <!-- Daily Practice Session -->
+                <div class="practice-session-section">
+                    <h2>🎯 Daily Practice Session</h2>
+                    <div class="practice-controls">
+                        <select id="practiceSubject" class="input-field">
+                            <option value="">Select Subject</option>
+                            <option value="physics">Physics</option>
+                            <option value="chemistry">Chemistry</option>
+                            <option value="mathematics">Mathematics</option>
+                            <option value="programming">Programming</option>
+                            <option value="webdev">Web Development</option>
+                        </select>
+                        <button class="generate-btn" onclick="generateDailyQuestions()">🎲 Generate Today's Questions</button>
+                    </div>
+                    <div id="practiceQuestions" class="practice-questions">
+                        <p class="empty-message">Select a subject and generate daily practice questions!</p>
+                    </div>
+                </div>
+
+                <!-- AI Chatbot Section -->
+                <div class="chatbot-section">
+                    <h3>🤖 Study Assistant</h3>
+                    <div class="chatbot-container">
+                        <div id="chatMessages" class="chat-messages">
+                            <div class="bot-message">
+                                <div class="message-avatar">🤖</div>
+                                <div class="message-content">
+                                    <p>Hello! I'm your Study Assistant. I can help you with:</p>
+                                    <ul>
+                                        <li>Study tips and techniques</li>
+                                        <li>Time management advice</li>
+                                        <li>Motivational support</li>
+                                        <li>Subject-specific guidance</li>
+                                        <li>Exam preparation strategies</li>
+                                    </ul>
+                                    <p>What would you like to know?</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-input-container">
+                            <input 
+                                type="text" 
+                                id="chatInput" 
+                                placeholder="Ask me anything..." 
+                                class="chat-input"
+                            >
+                            <button class="chat-send-btn" onclick="sendMessage()">📤</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Important Events Section -->
+                <div class="events-section">
+                    <h2>📅 Important Events</h2>
+                    <div class="add-event-section">
+                        <div class="event-form">
+                            <input type="text" id="eventTitle" placeholder="Event Title" class="input-field">
+                            <input type="date" id="eventDate" class="input-field">
+                            <input type="time" id="eventTime" class="input-field">
+                            <textarea id="eventDescription" placeholder="Event Description" class="input-field" rows="2"></textarea>
+                            <button class="add-event-btn" onclick="addEvent()">➕ Add Event</button>
+                        </div>
+                    </div>
+                    <div id="eventsList" class="events-list">
+                        <p class="empty-message">No upcoming events. Add your first event!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 3: Notes and Analytics -->
+            <div id="page3" class="page">
+                <!-- Settings/Notes Section -->
+                <div class="notes-section">
+                    <h3>Daily Notes & Progress</h3>
+                    <textarea 
+                        id="dailyNotes" 
+                        placeholder="Write your thoughts, accomplishments, or plan for tomorrow..."
+                        class="notes-textarea"
+                    ></textarea>
+                    <button class="save-notes-btn" onclick="saveNotes()">💾 Save Notes</button>
+                </div>
+
+                <!-- Advanced Analytics -->
+                <div class="analytics-section">
+                    <h2>📊 Advanced Analytics</h2>
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h4>Monthly Progress</h4>
+                            <div class="analytics-content" id="monthlyProgress">
+                                <p>Loading monthly statistics...</p>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <h4>Subject Performance</h4>
+                            <div class="analytics-content" id="subjectPerformance">
+                                <p>Loading subject analysis...</p>
+                            </div>
+                        </div>
+                        <div class="analytics-card">
+                            <h4>Study Patterns</h4>
+                            <div class="analytics-content" id="studyPatterns">
+                                <p>Loading study patterns...</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Settings/Notes Section -->
-    <div class="notes-section">
-        <h3>Daily Notes & Progress</h3>
-        <textarea 
-            id="dailyNotes" 
-            placeholder="Write your thoughts, accomplishments, or plan for tomorrow..."
-            class="notes-textarea"
-        ></textarea>
-        <button class="save-notes-btn" onclick="saveNotes()">💾 Save Notes</button>
+    <!-- Pagination -->
+    <div class="pagination">
+        <button class="page-btn active" onclick="switchPage(1)">1</button>
+        <button class="page-btn" onclick="switchPage(2)">2</button>
+        <button class="page-btn" onclick="switchPage(3)">3</button>
     </div>
 
-    <script src="script.js"></script>
     <script>
-        // Load user data
-        function loadDashboard() {
-            const userData = JSON.parse(localStorage.getItem('mmmutUserData'));
-            if (!userData) {
-                window.location.href = 'index.html';
-                return;
-            }
+        // Initialize
+        loadDashboard();
 
-            document.getElementById('userName').textContent = userData.name;
-            document.getElementById('userRoll').textContent = userData.rollNo;
-            document.getElementById('sName').textContent = userData.name;
-            document.getElementById('sRoll').textContent = 'Roll: ' + userData.rollNo;
-            document.getElementById('sBranch').textContent = userData.branch;
-            document.getElementById('sSemester').textContent = 'Semester ' + userData.semester;
-
-            // Set today's date
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('dateInput').value = today;
-            updateDateDisplay();
-
-            loadTasks();
-            loadNotes();
-
-            // Listen for date changes
-            document.getElementById('dateInput').addEventListener('change', function() {
-                loadTasks();
-                loadNotes();
-                updateDateDisplay();
-            });
+        // Animate stars
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.width = Math.random() * 3 + 'px';
+            star.style.height = star.style.width;
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.querySelector('.stars').appendChild(star);
         }
 
-        function updateDateDisplay() {
-            const dateInput = document.getElementById('dateInput').value;
-            const date = new Date(dateInput + 'T00:00:00');
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('currentDate').textContent = date.toLocaleDateString('en-IN', options);
-        }
-
-        function addTask() {
-            const timeSlot = document.getElementById('timeSlot').value;
-            const taskText = document.getElementById('taskInput').value;
-            const category = document.getElementById('categorySelect').value;
-            const dateInput = document.getElementById('dateInput').value;
-
-            if (!timeSlot || !taskText || !category) {
-                alert('Please fill all fields!');
-                return;
-            }
-
-            const tasks = JSON.parse(localStorage.getItem('mmmutTasks')) || {};
-            if (!tasks[dateInput]) {
-                tasks[dateInput] = [];
-            }
-
-            const task = {
-                id: Date.now(),
-                time: timeSlot,
-                text: taskText,
-                category: category,
-                completed: false,
-                createdAt: new Date().toISOString()
-            };
-
-            tasks[dateInput].push(task);
-            localStorage.setItem('mmmutTasks', JSON.stringify(tasks));
-
-            // Clear inputs
-            document.getElementById('timeSlot').value = '';
-            document.getElementById('taskInput').value = '';
-            document.getElementById('categorySelect').value = '';
-
-            loadTasks();
+        for(let i = 0; i < 50; i++) {
+            createStar();
         }
 
         function loadTasks() {
@@ -278,9 +412,75 @@
             const tasks = JSON.parse(localStorage.getItem('mmmutTasks')) || {};
             const dayTasks = tasks[dateInput] || [];
 
-            document.getElementById('taskCount').textContent = dayTasks.length;
-            document.getElementById('completedCount').textContent = dayTasks.filter(t => t.completed).length;
-            document.getElementById('pendingCount').textContent = dayTasks.filter(t => !t.completed).length;
+            const totalTasks = dayTasks.length;
+            const completedTasks = dayTasks.filter(t => t.completed).length;
+            const pendingTasks = totalTasks - completedTasks;
+            const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+            document.getElementById('taskCount').textContent = totalTasks;
+            document.getElementById('completedCount').textContent = completedTasks;
+            document.getElementById('pendingCount').textContent = pendingTasks;
+            document.getElementById('completionRate').textContent = completionRate + '%';
+
+            // Update weekly progress and streak
+            updateWeeklyProgress();
+            updateStudyStreak();
+        }
+
+        function updateWeeklyProgress() {
+            const tasks = JSON.parse(localStorage.getItem('mmmutTasks')) || {};
+            const today = new Date();
+            let weeklyTotal = 0;
+            let weeklyCompleted = 0;
+
+            // Calculate for last 7 days
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                
+                if (tasks[dateStr]) {
+                    weeklyTotal += tasks[dateStr].length;
+                    weeklyCompleted += tasks[dateStr].filter(t => t.completed).length;
+                }
+            }
+
+            const weeklyRate = weeklyTotal > 0 ? Math.round((weeklyCompleted / weeklyTotal) * 100) : 0;
+            
+            document.getElementById('weeklyProgress').style.width = weeklyRate + '%';
+            document.getElementById('weeklyStats').textContent = 
+                `${weeklyCompleted}/${weeklyTotal} tasks (${weeklyRate}%)`;
+        }
+
+        function updateStudyStreak() {
+            const tasks = JSON.parse(localStorage.getItem('mmmutTasks')) || {};
+            let streak = 0;
+            const today = new Date();
+
+            // Check consecutive days with completed study tasks
+            for (let i = 0; i < 30; i++) { // Check up to 30 days back
+                const date = new Date(today);
+                date.setDate(today.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                
+                if (tasks[dateStr]) {
+                    const studyTasks = tasks[dateStr].filter(t => 
+                        t.category === 'Study' && t.completed
+                    );
+                    if (studyTasks.length > 0) {
+                        streak++;
+                    } else {
+                        break; // Streak broken
+                    }
+                } else if (i === 0) {
+                    // Today has no tasks, continue checking previous days
+                    continue;
+                } else {
+                    break; // No tasks on this day, streak broken
+                }
+            }
+
+            document.getElementById('studyStreak').textContent = streak;
         }
 
         function saveNotes() {
@@ -300,11 +500,938 @@
             document.getElementById('dailyNotes').value = allNotes[dateInput] || '';
         }
 
+        function loadProfileImage() {
+            const userData = JSON.parse(localStorage.getItem('mmmutUserData'));
+            const profileImage = localStorage.getItem('mmmutProfileImage');
+            
+            if (profileImage) {
+                document.getElementById('studentImage').src = profileImage;
+                document.getElementById('studentImage').style.display = 'block';
+                document.getElementById('defaultAvatar').style.display = 'none';
+            } else {
+                document.getElementById('studentImage').style.display = 'none';
+                document.getElementById('defaultAvatar').style.display = 'block';
+            }
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = e.target.result;
+                    localStorage.setItem('mmmutProfileImage', imageData);
+                    loadProfileImage();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            
+            // Clear input
+            input.value = '';
+            
+            // Get bot response
+            setTimeout(() => {
+                const response = getBotResponse(message);
+                addMessage(response, 'bot');
+            }, 500);
+        }
+
+        function addMessage(text, sender) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = sender + '-message';
+            
+            const avatar = sender === 'bot' ? '🤖' : '👨‍🎓';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">
+                    <p>${text}</p>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function getBotResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Study-related responses
+            if (lowerMessage.includes('study') || lowerMessage.includes('exam') || lowerMessage.includes('test')) {
+                const responses = [
+                    "Great question! For effective studying, try the Pomodoro technique: 25 minutes of focused study followed by a 5-minute break. This helps maintain concentration and prevents burnout.",
+                    "Remember: Active recall and spaced repetition are proven techniques for better retention. Test yourself regularly on what you've learned!",
+                    "Make sure to take regular breaks and stay hydrated. A well-rested mind absorbs information much better than a tired one.",
+                    "Create a study schedule that includes time for review. Going over material multiple times strengthens memory connections."
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+            
+            // Time management
+            if (lowerMessage.includes('time') || lowerMessage.includes('schedule') || lowerMessage.includes('manage')) {
+                const responses = [
+                    "Time management is crucial for academic success! Prioritize your tasks based on urgency and importance. Use tools like the Eisenhower Matrix to categorize your activities.",
+                    "Try to maintain a consistent daily routine. Your brain works better with predictable patterns.",
+                    "Don't forget to allocate time for breaks and leisure activities. Balance is key to long-term success.",
+                    "Track your time for a few days to identify patterns and areas for improvement."
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+            
+            // Motivation
+            if (lowerMessage.includes('motivat') || lowerMessage.includes('tired') || lowerMessage.includes('lazy') || lowerMessage.includes('hard')) {
+                const responses = [
+                    "Every expert was once a beginner. Keep pushing forward - consistency beats talent when talent doesn't show up!",
+                    "Remember why you started. Your goals are worth the effort. Take it one day at a time.",
+                    "Celebrate small victories along the way. Progress, not perfection, is the goal.",
+                    "You're capable of more than you know. Believe in yourself and keep taking action."
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+            
+            // Subject-specific help
+            if (lowerMessage.includes('math') || lowerMessage.includes('physics') || lowerMessage.includes('chemistry')) {
+                const responses = [
+                    "For technical subjects, focus on understanding concepts rather than memorizing formulas. Practice solving problems regularly.",
+                    "Break down complex problems into smaller, manageable steps. This makes them less intimidating.",
+                    "Use visual aids and diagrams when possible. They help in understanding abstract concepts.",
+                    "Don't hesitate to ask questions in class. Clarifying doubts early prevents bigger confusion later."
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+            
+            // General responses
+            const generalResponses = [
+                "That's an interesting point! Could you tell me more about what you're working on?",
+                "I'm here to help you succeed in your studies. What specific area would you like assistance with?",
+                "Academic success comes from consistent effort and smart strategies. What challenges are you facing?",
+                "Feel free to ask me about study techniques, time management, or any academic concerns you have."
+            ];
+            
+            return generalResponses[Math.floor(Math.random() * generalResponses.length)];
+        }
+
+        // Allow sending message with Enter key
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function openSubjectMaterial(subject) {
+            const materials = {
+                physics: {
+                    title: "Physics Study Materials",
+                    content: `
+                        <h3>Key Topics:</h3>
+                        <ul>
+                            <li>Mechanics (Laws of Motion, Work & Energy)</li>
+                            <li>Thermodynamics (Heat, Temperature)</li>
+                            <li>Electromagnetism (Current, Magnetism)</li>
+                            <li>Optics (Reflection, Refraction)</li>
+                            <li>Modern Physics (Quantum, Relativity)</li>
+                        </ul>
+                        <h3>Important Formulas:</h3>
+                        <ul>
+                            <li>F = ma (Newton's Second Law)</li>
+                            <li>E = mc² (Mass-Energy Equivalence)</li>
+                            <li>V = IR (Ohm's Law)</li>
+                            <li>c = λν (Wave Equation)</li>
+                        </ul>
+                        <p><strong>Tip:</strong> Practice numerical problems daily to master concepts.</p>
+                    `
+                },
+                'physics-backend': {
+                    title: "Physics Advanced Topics",
+                    content: `
+                        <h3>Advanced Topics:</h3>
+                        <ul>
+                            <li>Quantum Mechanics (Wave Functions, Operators)</li>
+                            <li>Special Relativity (Time Dilation, Length Contraction)</li>
+                            <li>Electromagnetic Waves (Maxwell's Equations)</li>
+                            <li>Thermodynamics (Entropy, Heat Engines)</li>
+                            <li>Nuclear Physics (Radioactivity, Fission/Fusion)</li>
+                        </ul>
+                        <h3>Engineering Applications:</h3>
+                        <ul>
+                            <li>Semiconductor Physics</li>
+                            <li>Lasers and Fiber Optics</li>
+                            <li>Superconductivity</li>
+                            <li>Nanotechnology</li>
+                        </ul>
+                        <p><strong>Tip:</strong> Focus on mathematical derivations and real-world applications.</p>
+                    `
+                },
+                chemistry: {
+                    title: "Chemistry Study Materials",
+                    content: `
+                        <h3>Key Topics:</h3>
+                        <ul>
+                            <li>Physical Chemistry (Atomic Structure, Chemical Bonding)</li>
+                            <li>Organic Chemistry (Hydrocarbons, Functional Groups)</li>
+                            <li>Inorganic Chemistry (Periodic Table, Coordination)</li>
+                            <li>Analytical Chemistry (Qualitative Analysis)</li>
+                        </ul>
+                        <h3>Important Concepts:</h3>
+                        <ul>
+                            <li>Periodic Trends & Properties</li>
+                            <li>Chemical Equilibrium</li>
+                            <li>Reaction Mechanisms</li>
+                            <li>Acid-Base Theories</li>
+                        </ul>
+                        <p><strong>Tip:</strong> Learn reactions with mechanisms, not just by rote.</p>
+                    `
+                },
+                'chemistry-backend': {
+                    title: "Chemistry Advanced Topics",
+                    content: `
+                        <h3>Advanced Topics:</h3>
+                        <ul>
+                            <li>Physical Chemistry (Quantum Chemistry, Spectroscopy)</li>
+                            <li>Organic Synthesis (Reaction Mechanisms, Retrosynthesis)</li>
+                            <li>Coordination Chemistry (Crystal Field Theory)</li>
+                            <li>Electrochemistry (Fuel Cells, Corrosion)</li>
+                        </ul>
+                        <h3>Engineering Applications:</h3>
+                        <ul>
+                            <li>Polymer Chemistry</li>
+                            <li>Nanomaterials</li>
+                            <li>Catalysis and Reaction Engineering</li>
+                            <li>Environmental Chemistry</li>
+                        </ul>
+                        <p><strong>Tip:</strong> Understand the underlying principles and mechanisms.</p>
+                    `
+                },
+                mathematics: {
+                    title: "Mathematics Study Materials",
+                    content: `
+                        <h3>Key Topics:</h3>
+                        <ul>
+                            <li>Calculus (Limits, Derivatives, Integrals)</li>
+                            <li>Algebra (Matrices, Determinants)</li>
+                            <li>Coordinate Geometry (Lines, Circles, Conics)</li>
+                            <li>Trigonometry (Identities, Equations)</li>
+                            <li>Statistics & Probability</li>
+                        </ul>
+                        <h3>Important Formulas:</h3>
+                        <ul>
+                            <li>d/dx(sin x) = cos x</li>
+                            <li>∫xⁿ dx = xⁿ⁺¹/(n+1) + c</li>
+                            <li>(a+b)² = a² + 2ab + b²</li>
+                            <li>sin²θ + cos²θ = 1</li>
+                        </ul>
+                        <p><strong>Tip:</strong> Practice regularly and understand the logic behind formulas.</p>
+                    `
+                },
+                'mathematics-backend': {
+                    title: "Mathematics Advanced Topics",
+                    content: `
+                        <h3>Advanced Topics:</h3>
+                        <ul>
+                            <li>Complex Analysis (Complex Numbers, Contour Integration)</li>
+                            <li>Differential Equations (ODE, PDE)</li>
+                            <li>Linear Algebra (Vector Spaces, Eigenvalues)</li>
+                            <li>Numerical Methods (Root Finding, Integration)</li>
+                            <li>Discrete Mathematics (Graph Theory, Combinatorics)</li>
+                        </ul>
+                        <h3>Engineering Applications:</h3>
+                        <ul>
+                            <li>Control Systems</li>
+                            <li>Signal Processing</li>
+                            <li>Optimization Techniques</li>
+                            <li>Finite Element Analysis</li>
+                        </ul>
+                        <p><strong>Tip:</strong> Master the fundamentals before moving to applications.</p>
+                    `
+                },
+                programming: {
+                    title: "Programming Study Materials",
+                    content: `
+                        <h3>Key Topics:</h3>
+                        <ul>
+                            <li>Data Structures (Arrays, Linked Lists, Trees)</li>
+                            <li>Algorithms (Sorting, Searching, Dynamic Programming)</li>
+                            <li>Object-Oriented Programming</li>
+                            <li>Database Management</li>
+                            <li>Web Development (HTML, CSS, JavaScript)</li>
+                        </ul>
+                        <h3>Important Concepts:</h3>
+                        <ul>
+                            <li>Time & Space Complexity Analysis</li>
+                            <li>Problem-Solving Approaches</li>
+                            <li>Code Optimization</li>
+                            <li>Debugging Techniques</li>
+                        </ul>
+                        <p><strong>Tip:</strong> Code daily and participate in coding challenges.</p>
+                    `
+                },
+                'programming-backend': {
+                    title: "Programming Advanced Topics",
+                    content: `
+                        <h3>Advanced Topics:</h3>
+                        <ul>
+                            <li>Advanced Data Structures (Tries, Segment Trees, Fenwick Trees)</li>
+                            <li>Algorithm Design (Greedy, Divide & Conquer, Backtracking)</li>
+                            <li>System Design (Scalability, Distributed Systems)</li>
+                            <li>Competitive Programming (Advanced Problems)</li>
+                        </ul>
+                        <h3>Engineering Applications:</h3>
+                        <ul>
+                            <li>Machine Learning Algorithms</li>
+                            <li>Computer Graphics</li>
+                            <li>Compiler Design</li>
+                            <li>Operating Systems</li>
+                        </ul>
+                        <p><strong>Tip:</strong> Focus on problem-solving patterns and optimization techniques.</p>
+                    `
+                },
+                webdev: {
+                    title: "Web Development Study Materials",
+                    content: `
+                        <h3>Frontend Technologies:</h3>
+                        <ul>
+                            <li>HTML5 (Semantic Elements, Forms, APIs)</li>
+                            <li>CSS3 (Flexbox, Grid, Animations, Responsive Design)</li>
+                            <li>JavaScript (ES6+, DOM Manipulation, Async Programming)</li>
+                            <li>React/Vue/Angular Frameworks</li>
+                        </ul>
+                        <h3>Backend Technologies:</h3>
+                        <ul>
+                            <li>Node.js & Express.js</li>
+                            <li>RESTful APIs & GraphQL</li>
+                            <li>Database Design (SQL & NoSQL)</li>
+                            <li>Authentication & Security</li>
+                        </ul>
+                        <p><strong>Tip:</strong> Build projects to apply your learning practically.</p>
+                    `
+                },
+                'webdev-backend': {
+                    title: "Web Development Advanced Topics",
+                    content: `
+                        <h3>Advanced Backend:</h3>
+                        <ul>
+                            <li>Microservices Architecture</li>
+                            <li>Containerization (Docker, Kubernetes)</li>
+                            <li>Cloud Platforms (AWS, Azure, GCP)</li>
+                            <li>API Design & Documentation</li>
+                        </ul>
+                        <h3>DevOps & Tools:</h3>
+                        <ul>
+                            <li>CI/CD Pipelines</li>
+                            <li>Monitoring & Logging</li>
+                            <li>Performance Optimization</li>
+                            <li>Security Best Practices</li>
+                        </ul>
+                        <p><strong>Tip:</strong> Learn to deploy and maintain production applications.</p>
+                    `
+                }
+            };
+
+            const material = materials[subject];
+            if (material) {
+                // Add message to chat
+                addMessage(`Opening ${material.title}...`, 'bot');
+                setTimeout(() => {
+                    addMessage(material.content, 'bot');
+                }, 500);
+            }
+        }
+
+        function triggerFileUpload(subject) {
+            document.getElementById(subject + '-upload').click();
+        }
+
+        function uploadSubjectFile(subject, inputElement) {
+            const file = inputElement.files[0];
+            if (!file) return;
+
+            const title = prompt(`Enter title for ${file.name}:`, file.name.replace(/\.[^/.]+$/, ""));
+            if (!title) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const materials = JSON.parse(localStorage.getItem('mmmutUploadedMaterials')) || {};
+                if (!materials[subject]) {
+                    materials[subject] = [];
+                }
+
+                const material = {
+                    id: Date.now(),
+                    title: title,
+                    fileName: file.name,
+                    fileType: file.type,
+                    fileData: e.target.result,
+                    uploadDate: new Date().toISOString(),
+                    subject: subject
+                };
+
+                materials[subject].push(material);
+                localStorage.setItem('mmmutUploadedMaterials', JSON.stringify(materials));
+
+                alert(`File uploaded to ${subject.charAt(0).toUpperCase() + subject.slice(1)}! 📁`);
+                inputElement.value = ''; // Reset file input
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function viewSubjectMaterials(subject) {
+            const materials = JSON.parse(localStorage.getItem('mmmutUploadedMaterials')) || {};
+            const subjectMaterials = materials[subject] || [];
+
+            if (subjectMaterials.length === 0) {
+                alert(`No materials uploaded for ${subject.charAt(0).toUpperCase() + subject.slice(1)} yet.`);
+                return;
+            }
+
+            let materialList = `📚 ${subject.charAt(0).toUpperCase() + subject.slice(1)} Materials:\n\n`;
+            subjectMaterials.forEach((material, index) => {
+                materialList += `${index + 1}. ${material.title} (${material.fileName})\n`;
+                materialList += `   Uploaded: ${new Date(material.uploadDate).toLocaleDateString()}\n\n`;
+            });
+
+            materialList += 'Choose a file to view/download:';
+            const choices = subjectMaterials.map((m, i) => `${i + 1}. ${m.title}`).join('\n');
+
+            const choice = prompt(materialList + '\n\n' + choices + '\n\nEnter number (1-' + subjectMaterials.length + '):');
+            if (choice && !isNaN(choice) && choice >= 1 && choice <= subjectMaterials.length) {
+                const selectedMaterial = subjectMaterials[choice - 1];
+                viewMaterial(selectedMaterial.id);
+            }
+        }
+
+        function switchPage(pageNumber) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            document.getElementById('page' + pageNumber).classList.add('active');
+
+            // Update pagination buttons
+            document.querySelectorAll('.page-btn').forEach((btn, index) => {
+                if (index + 1 === pageNumber) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Load page-specific data
+            if (pageNumber === 3) {
+                loadAdvancedAnalytics();
+            }
+        }
+
+        function addEvent() {
+            const title = document.getElementById('eventTitle').value;
+            const date = document.getElementById('eventDate').value;
+            const time = document.getElementById('eventTime').value;
+            const description = document.getElementById('eventDescription').value;
+
+            if (!title || !date) {
+                alert('Please enter at least title and date for the event!');
+                return;
+            }
+
+            const events = JSON.parse(localStorage.getItem('mmmutEvents')) || [];
+            const event = {
+                id: Date.now(),
+                title: title,
+                date: date,
+                time: time || '00:00',
+                description: description || '',
+                createdAt: new Date().toISOString()
+            };
+
+            events.push(event);
+            localStorage.setItem('mmmutEvents', JSON.stringify(events));
+
+            // Clear form
+            document.getElementById('eventTitle').value = '';
+            document.getElementById('eventDate').value = '';
+            document.getElementById('eventTime').value = '';
+            document.getElementById('eventDescription').value = '';
+
+            loadEvents();
+            alert('Event added successfully! 📅');
+        }
+
+        function loadEvents() {
+            const events = JSON.parse(localStorage.getItem('mmmutEvents')) || [];
+            const eventsList = document.getElementById('eventsList');
+
+            // Sort events by date and time
+            events.sort((a, b) => {
+                const dateTimeA = new Date(a.date + 'T' + a.time);
+                const dateTimeB = new Date(b.date + 'T' + b.time);
+                return dateTimeA - dateTimeB;
+            });
+
+            // Filter upcoming events
+            const now = new Date();
+            const upcomingEvents = events.filter(event => {
+                const eventDateTime = new Date(event.date + 'T' + event.time);
+                return eventDateTime >= now;
+            });
+
+            if (upcomingEvents.length === 0) {
+                eventsList.innerHTML = '<p class="empty-message">No upcoming events. Add your first event!</p>';
+                return;
+            }
+
+            eventsList.innerHTML = upcomingEvents.map(event => {
+                const eventDate = new Date(event.date + 'T' + event.time);
+                const timeString = event.time !== '00:00' ? event.time : '';
+                const dateString = eventDate.toLocaleDateString('en-IN', {
+                    weekday: 'short',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+
+                return `
+                    <div class="event-card">
+                        <div class="event-header">
+                            <h4>${event.title}</h4>
+                            <div class="event-actions">
+                                <button onclick="editEvent(${event.id})">✏️</button>
+                                <button onclick="deleteEvent(${event.id})">🗑️</button>
+                            </div>
+                        </div>
+                        <div class="event-details">
+                            <p class="event-date">📅 ${dateString} ${timeString ? 'at ' + timeString : ''}</p>
+                            ${event.description ? `<p class="event-description">${event.description}</p>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function editEvent(eventId) {
+            const events = JSON.parse(localStorage.getItem('mmmutEvents')) || [];
+            const event = events.find(e => e.id === eventId);
+            if (!event) return;
+
+            const newTitle = prompt('Edit event title:', event.title);
+            if (newTitle === null) return;
+
+            event.title = newTitle;
+            localStorage.setItem('mmmutEvents', JSON.stringify(events));
+            loadEvents();
+        }
+
+        function deleteEvent(eventId) {
+            if (confirm('Delete this event?')) {
+                const events = JSON.parse(localStorage.getItem('mmmutEvents')) || [];
+                const filteredEvents = events.filter(e => e.id !== eventId);
+                localStorage.setItem('mmmutEvents', JSON.stringify(filteredEvents));
+                loadEvents();
+            }
+        }
+
+        function loadAdvancedAnalytics() {
+            // Monthly Progress
+            const monthlyStats = calculateMonthlyStats();
+            document.getElementById('monthlyProgress').innerHTML = `
+                <div class="stat-item">
+                    <span>Total Tasks: ${monthlyStats.totalTasks}</span>
+                </div>
+                <div class="stat-item">
+                    <span>Completed: ${monthlyStats.completedTasks}</span>
+                </div>
+                <div class="stat-item">
+                    <span>Success Rate: ${monthlyStats.successRate}%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${monthlyStats.successRate}%"></div>
+                </div>
+            `;
+
+            // Subject Performance
+            const subjectStats = calculateSubjectPerformance();
+            document.getElementById('subjectPerformance').innerHTML = subjectStats.map(stat => `
+                <div class="subject-stat">
+                    <span class="subject-name">${stat.subject}</span>
+                    <span class="subject-count">${stat.count} tasks</span>
+                    <div class="mini-progress">
+                        <div class="mini-fill" style="width: ${stat.percentage}%"></div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Study Patterns
+            const patterns = analyzeStudyPatterns();
+            document.getElementById('studyPatterns').innerHTML = `
+                <div class="pattern-item">
+                    <span>Most Productive Day: ${patterns.bestDay}</span>
+                </div>
+                <div class="pattern-item">
+                    <span>Peak Study Hours: ${patterns.peakHours}</span>
+                </div>
+                <div class="pattern-item">
+                    <span>Favorite Subject: ${patterns.favoriteSubject}</span>
+                </div>
+                <div class="pattern-item">
+                    <span>Weekly Average: ${patterns.weeklyAverage} tasks</span>
+                </div>
+            `;
+        }
+
+        function calculateMonthlyStats() {
+            const tasks = JSON.parse(localStorage.getItem('mmmutTasks')) || {};
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
+            let totalTasks = 0;
+            let completedTasks = 0;
+
+            for (let date in tasks) {
+                const taskDate = new Date(date);
+                if (taskDate.getMonth() === currentMonth && taskDate.getFullYear() === currentYear) {
+                    totalTasks += tasks[date].length;
+                    completedTasks += tasks[date].filter(t => t.completed).length;
+                }
+            }
+
+            const successRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+            return {
+                totalTasks,
+                completedTasks,
+                successRate
+            };
+        }
+
+        function calculateSubjectPerformance() {
+            const tasks = JSON.parse(localStorage.getItem('mmmutTasks')) || {};
+            const subjectCount = {};
+
+            for (let date in tasks) {
+                tasks[date].forEach(task => {
+                    if (task.category === 'Study') {
+                        const subject = extractSubjectFromTask(task.text);
+                        subjectCount[subject] = (subjectCount[subject] || 0) + 1;
+                    }
+                });
+            }
+
+            const total = Object.values(subjectCount).reduce((sum, count) => sum + count, 0);
+
+            return Object.entries(subjectCount)
+                .map(([subject, count]) => ({
+                    subject: subject.charAt(0).toUpperCase() + subject.slice(1),
+                    count,
+                    percentage: total > 0 ? Math.round((count / total) * 100) : 0
+                }))
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 5); // Top 5 subjects
+        }
+
+        function extractSubjectFromTask(text) {
+            const subjects = ['physics', 'chemistry', 'mathematics', 'programming', 'webdev', 'math', 'program'];
+            const lowerText = text.toLowerCase();
+
+            for (let subject of subjects) {
+                if (lowerText.includes(subject)) {
+                    return subject === 'math' ? 'mathematics' : subject === 'program' ? 'programming' : subject;
+                }
+            }
+            return 'Other';
+        }
+
+        function analyzeStudyPatterns() {
+            const tasks = JSON.parse(localStorage.getItem('mmmutTasks')) || {};
+            const dayStats = {};
+            const hourStats = {};
+            const subjectStats = {};
+
+            for (let date in tasks) {
+                const taskDate = new Date(date);
+                const dayName = taskDate.toLocaleDateString('en-US', { weekday: 'long' });
+
+                tasks[date].forEach(task => {
+                    // Day analysis
+                    dayStats[dayName] = (dayStats[dayName] || 0) + 1;
+
+                    // Hour analysis
+                    if (task.time) {
+                        const startHour = task.time.split('-')[0].split(':')[0];
+                        hourStats[startHour] = (hourStats[startHour] || 0) + 1;
+                    }
+
+                    // Subject analysis
+                    if (task.category === 'Study') {
+                        const subject = extractSubjectFromTask(task.text);
+                        subjectStats[subject] = (subjectStats[subject] || 0) + 1;
+                    }
+                });
+            }
+
+            const bestDay = Object.keys(dayStats).reduce((a, b) => dayStats[a] > dayStats[b] ? a : b, 'None');
+            const peakHour = Object.keys(hourStats).reduce((a, b) => hourStats[a] > hourStats[b] ? a : b, 'None');
+            const peakHours = peakHour !== 'None' ? `${peakHour}:00 - ${parseInt(peakHour) + 1}:00` : 'None';
+            const favoriteSubject = Object.keys(subjectStats).reduce((a, b) => subjectStats[a] > subjectStats[b] ? a : b, 'None');
+
+            // Weekly average
+            const totalTasks = Object.values(tasks).reduce((sum, dayTasks) => sum + dayTasks.length, 0);
+            const weeks = Math.max(1, Math.ceil(Object.keys(tasks).length / 7));
+            const weeklyAverage = Math.round(totalTasks / weeks);
+
+            return {
+                bestDay,
+                peakHours,
+                favoriteSubject: favoriteSubject.charAt(0).toUpperCase() + favoriteSubject.slice(1),
+                weeklyAverage
+            };
+        }
+
+        function generateDailyQuestions() {
+            const subject = document.getElementById('practiceSubject').value;
+            if (!subject) {
+                alert('Please select a subject first!');
+                return;
+            }
+
+            const questions = generateSubjectQuestions(subject);
+            displayPracticeQuestions(questions, subject);
+        }
+
+        function generateSubjectQuestions(subject) {
+            const questionBanks = {
+                physics: [
+                    "A particle moves in a straight line with constant acceleration. If its velocity increases from 2 m/s to 8 m/s in 3 seconds, find the acceleration.",
+                    "Calculate the work done when a force of 10 N displaces an object by 5 m at an angle of 30° to the displacement.",
+                    "A 2 kg mass is attached to a spring with spring constant 100 N/m. Find the time period of oscillation.",
+                    "Two charges of +3μC and -3μC are placed 10 cm apart. Find the electric field at the midpoint.",
+                    "Light of wavelength 600 nm falls on a slit of width 0.1 mm. Find the angular position of first minimum."
+                ],
+                chemistry: [
+                    "Balance the redox reaction: KMnO₄ + HCl → KCl + MnCl₂ + H₂O + Cl₂",
+                    "Calculate the pH of 0.01 M HCl solution.",
+                    "Find the hybridization of carbon atoms in benzene (C₆H₆).",
+                    "A solution contains 10 g of glucose (C₆H₁₂O₆) in 100 g water. Find the mole fraction of glucose.",
+                    "Write the mechanism for SN1 reaction with an example."
+                ],
+                mathematics: [
+                    "Evaluate: ∫(x² + 3x + 2) dx from 0 to 2",
+                    "Find the eigenvalues of matrix A = [[2, 1], [1, 2]]",
+                    "Solve the differential equation: dy/dx + 2y = eˣ",
+                    "Find the area bounded by y = x² and y = 2x",
+                    "Prove that the series ∑(1/n²) converges using comparison test."
+                ],
+                programming: [
+                    "Write a function to check if a string is palindrome in C++.",
+                    "Implement binary search algorithm recursively.",
+                    "Find the time complexity of bubble sort in worst case.",
+                    "Write SQL query to find second highest salary from employee table.",
+                    "Explain the difference between stack and heap memory."
+                ],
+                webdev: [
+                    "Write HTML and CSS to create a responsive navigation bar.",
+                    "Explain the difference between let, const, and var in JavaScript.",
+                    "Write a JavaScript function to validate email format using regex.",
+                    "Explain how CORS works and why it's important.",
+                    "Create a simple React component that displays a counter with increment/decrement buttons."
+                ]
+            };
+
+            const subjectQuestions = questionBanks[subject] || [];
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Generate 3 random questions for today
+            const shuffled = [...subjectQuestions].sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, 3).map((question, index) => ({
+                id: index + 1,
+                question: question,
+                subject: subject,
+                date: today
+            }));
+        }
+
+        function displayPracticeQuestions(questions, subject) {
+            const container = document.getElementById('practiceQuestions');
+            
+            let html = `<div class="practice-header">
+                <h4>Today's ${subject.charAt(0).toUpperCase() + subject.slice(1)} Practice Questions</h4>
+                <p>Generated on ${new Date().toLocaleDateString()}</p>
+            </div>`;
+            
+            questions.forEach(q => {
+                html += `
+                    <div class="practice-question">
+                        <div class="question-number">Q${q.id}.</div>
+                        <div class="question-text">${q.question}</div>
+                        <div class="question-actions">
+                            <button onclick="showHint('${q.subject}', ${q.id})">💡 Hint</button>
+                            <button onclick="showSolution('${q.subject}', ${q.id})">✅ Solution</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `<div class="practice-footer">
+                <p>💪 Practice daily to improve your skills!</p>
+                <button onclick="generateDailyQuestions()">🔄 Generate New Set</button>
+            </div>`;
+            
+            container.innerHTML = html;
+        }
+
+        function showHint(subject, questionId) {
+            const hints = {
+                physics: [
+                    "Use the formula: a = (v₂ - v₁)/t",
+                    "Work = Force × Displacement × cosθ",
+                    "T = 2π√(m/k)",
+                    "Electric field due to point charges: E = kq/r²",
+                    "Single slit diffraction: sinθ = λ/a"
+                ],
+                chemistry: [
+                    "Balance atoms first, then charge",
+                    "pH = -log[H⁺]",
+                    "sp² hybridization in benzene",
+                    "Mole fraction = moles of solute / total moles",
+                    "Carbocation intermediate in SN1"
+                ],
+                mathematics: [
+                    "∫xⁿ dx = xⁿ⁺¹/(n+1) + c",
+                    "Characteristic equation: det(A - λI) = 0",
+                    "Integrating factor method",
+                    "Use definite integration",
+                    "Compare with p-series ∑(1/nᵖ)"
+                ],
+                programming: [
+                    "Compare characters from start and end",
+                    "Base case: low > high return -1",
+                    "O(n²) for worst case",
+                    "Use subquery or window function",
+                    "Stack: LIFO, Heap: dynamic allocation"
+                ],
+                webdev: [
+                    "Use flexbox for responsive design",
+                    "Scope differences: block vs function",
+                    "Use pattern attribute or JavaScript validation",
+                    "Cross-Origin Resource Sharing",
+                    "useState hook for state management"
+                ]
+            };
+
+            const subjectHints = hints[subject] || [];
+            const hint = subjectHints[questionId - 1] || "Think about the fundamental concepts!";
+            alert(`💡 Hint: ${hint}`);
+        }
+
+        function showSolution(subject, questionId) {
+            const solutions = {
+                physics: [
+                    "a = (8 - 2)/3 = 2 m/s²",
+                    "W = 10 × 5 × cos30° = 43.3 J",
+                    "T = 2π√(2/100) = 0.89 s",
+                    "E = (9×10⁹ × 3×10⁻⁶)/0.05² = 1.08×10⁷ N/C",
+                    "θ = arcsin(600×10⁻⁹/0.0001) = 0.0035 rad"
+                ],
+                chemistry: [
+                    "2KMnO₄ + 16HCl → 2KCl + 2MnCl₂ + 8H₂O + 5Cl₂",
+                    "pH = -log(0.01) = 2",
+                    "All carbon atoms have sp² hybridization",
+                    "Mole fraction = (10/180)/(10/180 + 100/18) = 0.025",
+                    "Rate = k[RX], proceeds via carbocation intermediate"
+                ],
+                mathematics: [
+                    "∫(x² + 3x + 2) dx = (x³/3 + 3x²/2 + 2x) from 0 to 2 = 20/3",
+                    "λ = 1, 3 (multiplicity 2)",
+                    "y = eˣ/(eˣ + c)",
+                    "Area = ∫(2x - x²) dx from 0 to 2 = 4/3",
+                    "∑(1/n²) < ∑(1/n(n-1)) = 1, converges"
+                ],
+                programming: [
+                    "bool isPalindrome(string s) { int n=s.length(); for(int i=0;i<n/2;i++) if(s[i]!=s[n-1-i]) return false; return true; }",
+                    "int binarySearch(int arr[], int low, int high, int key) { if(low>high) return -1; int mid=(low+high)/2; if(arr[mid]==key) return mid; else if(arr[mid]>key) return binarySearch(arr,low,mid-1,key); else return binarySearch(arr,mid+1,high,key); }",
+                    "O(n²) - when array is reverse sorted",
+                    "SELECT MAX(salary) FROM employee WHERE salary < (SELECT MAX(salary) FROM employee)",
+                    "Stack: automatic memory, LIFO. Heap: manual allocation/deallocation, slower but flexible"
+                ],
+                webdev: [
+                    "Use CSS Grid or Flexbox with media queries",
+                    "var: function scope, can be redeclared. let: block scope, cannot be redeclared. const: block scope, cannot be reassigned",
+                    "function validateEmail(email) { const regex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/; return regex.test(email); }",
+                    "Allows web pages to make requests to different domains. Prevents CSRF attacks",
+                    "import React, { useState } from 'react'; function Counter() { const [count, setCount] = useState(0); return (<div><button onClick={() => setCount(count-1)}>-</button><span>{count}</span><button onClick={() => setCount(count+1)}>+</button></div>); }"
+                ]
+            };
+
+            const subjectSolutions = solutions[subject] || [];
+            const solution = subjectSolutions[questionId - 1] || "Solution not available yet.";
+            alert(`✅ Solution: ${solution}`);
+        }
+
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('mmmutUserData');
                 window.location.href = 'index.html';
             }
+        }
+
+        function loadDashboard() {
+            // Load user data
+            const userData = JSON.parse(localStorage.getItem('mmmutUserData'));
+            if (!userData) {
+                // For testing - create dummy user data
+                const dummyData = {
+                    name: "Test Student",
+                    rollNumber: "12345678",
+                    branch: "CSE",
+                    semester: "6th"
+                };
+                localStorage.setItem('mmmutUserData', JSON.stringify(dummyData));
+                window.location.reload();
+                return;
+            }
+
+            // Set user info
+            document.getElementById('userName').textContent = userData.name;
+            document.getElementById('userRoll').textContent = userData.rollNumber;
+            document.getElementById('sName').textContent = userData.name;
+            document.getElementById('sRoll').textContent = `Roll: ${userData.rollNumber}`;
+            document.getElementById('sBranch').textContent = `Branch: ${userData.branch}`;
+            document.getElementById('sSemester').textContent = `Semester: ${userData.semester}`;
+
+            // Set current date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateInput').value = today;
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-IN', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Load initial data
+            loadTasks();
+            loadNotes();
+            loadProfileImage();
+            loadEvents();
+
+            // Set up event listeners
+            document.getElementById('dateInput').addEventListener('change', function() {
+                loadTasks();
+                loadNotes();
+            });
+
+            document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
         }
 
         // Initialize
